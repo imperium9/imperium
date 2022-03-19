@@ -1,6 +1,8 @@
 # This will import all the widgets
 # and modules which are available in
 # tkinter and ttk module
+#from curses.textpad import Textbox
+from msilib.schema import ListBox
 from tkinter import *
 import tkinter.font
 #from tkinter.ttk import *
@@ -24,6 +26,8 @@ master.config(background="black")
 #style.map('TButton', background=[('active', 'black')])
 # function to open a new window
 # on a button click
+def HackNasa():
+	pass
 def openPositionWindow():
 	
 	# Toplevel object which will
@@ -95,43 +99,79 @@ def openPhotoWindow():
 	# A Label widget to show in toplevel
 	Label(newWindow,text ="Target's Photo:",font=("System", 17), bg='black',fg='green').pack()
 
+#On sépare la fenetre en 4
 
+#Frame pour la liste de cibles
+FrameHautGauche = Frame(bg='Black')
 
-label = Label(master,text ="Target :",font=("System", 22), bg='black',fg='green')
+#Frame pour les boutons
+FrameBasDroit = Frame(bg='Black')
 
-label.grid(ipadx=100 ,padx = 60,pady=20,row=0,column=0,sticky = N)
+#Frame pour l'input shell
+FrameBasGauche = Frame(bg='Black')
+
+#Frame pour l'output du shell
+FrameHautDroit = Frame(bg='Black')
+
+label = Label(FrameHautGauche,text ="Select a Target :",font=("System", 22), bg='black',fg='green')
+label.pack(pady=0,padx=20,expand=YES)
+#label.grid(ipadx=100 ,padx = 60,pady=20,row=0,column=0,sticky = N)
+
+targetlist = Listbox(FrameHautGauche,bg='#021D09',font=("System", 15),fg='green',highlightcolor='#5C9A6C',yscrollcommand=YES)
+targetlist.pack(ipady=40,ipadx=60,pady=5,padx=15,expand=YES)
+
+#targetlist.grid(padx=5,row=1,column=0,sticky=N)
 
 # a button widget which will open a
 # new window on button click
-posbtn = Button(master, 
+posbtn = Button(FrameHautDroit, 
 			text ="Get Target Position",font=("System", 15), bg='black',fg='green',
 			#style = 'W.TButton',
 			command = openPositionWindow)
-posbtn.grid(padx=60,pady=20,row=1,column=1,sticky = N)
+#posbtn.pack()
+posbtn.grid(ipadx=30,ipady=4,padx=50,pady=7,row=2,column=1,sticky = N)
 
-keysbtn = Button(master,
+keysbtn = Button(FrameHautDroit,
 			text ="Get Target Keys",font=("System", 15), bg='black',fg='green',
 			#style = 'W.TButton',
 			command = openKeysWindow)
-keysbtn.grid(pady=20,row=2,column=1,sticky = N)
+#keysbtn.pack()
+keysbtn.grid(ipadx=30,ipady=4,padx=50,pady=7,row=3,column=1,sticky = N)
 
-camerabtn = Button(master,
+camerabtn = Button(FrameHautDroit,
 			text ="Get Target Webcam", font=("System", 15), bg='black',fg='green',
 			#style = 'W.TButton',
 			command = openCameraWindow)
-camerabtn.grid(pady=20,row=3,column=1,sticky=N)
+#camerabtn.pack()
+camerabtn.grid(ipadx=30,ipady=4,padx=50,pady=7,row=4,column=1,sticky=N)
 
-photobtn = Button(master,
+photobtn = Button(FrameHautDroit,
 			text ="Get Target Photo", font=("System", 15), bg='black',fg='green',
 			#style = 'W.TButton',
 			command = openPhotoWindow)
-photobtn.grid(pady=20,row=4,column=1,sticky = N)
+#photobtn.pack()
+photobtn.grid(ipadx=30,ipady=4,padx=50,pady=7,row=5,column=1,sticky = N)
 
-label2 = Label(master,text ="Target's Cmd :",font=("System", 17), bg='black',fg='green')
-label2.grid(row=5,column=0,sticky=W)
+hacknasabtn = Button(FrameHautDroit,
+			text ="Hack N.A.S.A", font=("System", 15), bg='black',fg='green',
+			#style = 'W.TButton',
+			command = HackNasa)
+#photobtn.pack()
+hacknasabtn.grid(ipadx=30,ipady=4,padx=50,pady=7,row=6,column=1,sticky = N)
+
+label2 = Label(FrameBasGauche,text ="Target's Cmd :",font=("System", 17), bg='black',fg='green')
+label2.grid(row=3,column=0,sticky=W)
 textfromshell= ""
-distantshell = Entry(master,font=("System", 17), bg='#021D09',fg='green')
-distantshell.grid(pady=20,row=6,column=0,sticky = W)
-distantshell.insert(0,">>>")
+distantshellinput = Entry(FrameBasGauche,font=("System", 17), bg='#021D09',fg='green')
+distantshellinput.grid(ipadx=4,pady=2,row=4,column=0,sticky = W)
+distantshellinput.insert(0,">>>")
+distantshelloutput = Text(FrameHautDroit,font=("System", 17), bg='#021D09',fg='green',height=7,width=40)
+distantshelloutput.grid(ipadx=0,ipady=0,pady=2,row=8,column=1,sticky = N)
+distantshelloutput.insert(END,"Output :")
+
+FrameHautGauche.grid(pady=10,row=0,column=0,sticky=N)
+FrameBasGauche.grid(padx=20,pady=370,row=0,column=0,sticky=W)
+FrameHautDroit.grid(pady=18,row=0,column=1,sticky=N)
+FrameBasDroit.grid(row=1,column=1,sticky=N)
 # mainloop, runs infinitely
 mainloop()
