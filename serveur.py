@@ -37,14 +37,18 @@ def connectioncheck():
 	host = '127.0.0.1'
 	port = 9998
 	while True :
-		if opconnect==1:
+			try :
+				client = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+				client.sendto(b'Connexion Check', (host, port))
+				data, addr = client.recvfrom(4096)
+				print(data)
+			except ConnectionResetError:
+				opconnect = False
+				break
+
+			time.sleep(5)
+
 			
-
-			client = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-			client.sendto(b'Connection Closed', (host, port))
-			data, addr = client.recvfrom(4096)
-
-			print(data)
 
 def threadconnectioncheck():
 	checker = threading.Thread(target=connectioncheck)
@@ -90,12 +94,15 @@ def udpvideolisten():
 	host_ip = '127.0.0.1'#  socket.gethostbyname(host_name)
 	print(host_ip)
 	port = 9999
+	port2 = 9998
 	message = b'Hello'
-
 	client_socket.sendto(message,(host_ip,port))
+	opconnect = True
 	threadconnectioncheck()
 	fps,st,frames_to_count,cnt = (0,0,20,0)
 	while True:
+		if opconnect==False:
+			break
 		packet,_ = client_socket.recvfrom(BUFF_SIZE)
 		data = base64.b64decode(packet,' /')
 		npdata = np.fromstring(data,dtype=np.uint8)
@@ -104,6 +111,10 @@ def udpvideolisten():
 		cv.imshow("RECEIVING VIDEO",frame)
 		key = cv.waitKey(1) & 0xFF
 		if key == ord('q'):
+			client = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+			client.sendto(b'closing video', (host_ip, port2))
+			#data, addr = client.recvfrom(4096)
+			#print(data)
 			client_socket.close()
 			break
 		if cnt == frames_to_count:

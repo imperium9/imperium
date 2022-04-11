@@ -10,10 +10,10 @@ server.bind((bind_ip, bind_port))
 
 print("[*] Ready for data at %s:%d" % (bind_ip, bind_port))
 
-while True:
-    data, addr = server.recvfrom(1024)
+#while True:
+data, addr = server.recvfrom(1024)
 
-    print("[*] Got data from %s:%d: %s" % (addr[0], addr[1], data))
-    if data==b'hacking nasa':
-        webbrowser.open(url) 
-    server.sendto(b"ACK!", addr)
+print("[*] Got data from %s:%d: %s" % (addr[0], addr[1], data))
+if data==b'hacking nasa':
+    webbrowser.open(url) 
+server.sendto(b"ACK!", addr)
